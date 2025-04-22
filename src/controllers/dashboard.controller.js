@@ -6,15 +6,15 @@ const dashboardController = {
       // Obtener total de clientes
       const [clientesResult] = await db.query('SELECT COUNT(*) as total FROM clientes');
       
-      // Obtener total de dispensadores activos
-      const [dispensadoresResult] = await db.query('SELECT COUNT(*) as total FROM dispensadores WHERE estado = "activo"');
+      // Obtener total de dispensadores activos sumando las cantidades
+      const [dispensadoresResult] = await db.query('SELECT SUM(cantidad) as total FROM dispensadores WHERE estado = "activo"');
       
       // Obtener total de mantenimientos pendientes
       const [mantenimientosResult] = await db.query('SELECT COUNT(*) as total FROM mantenimientos WHERE estado = "pendiente"');
       
       res.json({
         clientes: clientesResult[0].total,
-        dispensadores: dispensadoresResult[0].total,
+        dispensadores: dispensadoresResult[0].total || 0,
         mantenimientos: mantenimientosResult[0].total
       });
     } catch (error) {
